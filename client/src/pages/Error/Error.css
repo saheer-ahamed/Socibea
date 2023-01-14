@@ -1,0 +1,39 @@
+.error-body{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #333;
+}
+.error-container
+{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+.error-container h2
+{
+    font-size: 2.8em;
+    line-height: 2em;
+    color: #fff;
+    filter: drop-shadow(1px 1px 8px #fff);
+}
+.error-container p
+{
+    color: #fff;
+    font-size: 1.2em;
+}
+.error-container .btn
+{
+    width: 170px;
+    height: 50px;
+    appearance: none;
+    outline: none;
+    border: none;
+    background-color: var(--color-primary);
+    color: #fff;
+    font-size: 18px;
+    border-radius: 20px;
+    margin-top: 20px;
+}
