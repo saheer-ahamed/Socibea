@@ -94,7 +94,7 @@ exports.likePost = async (req, res, next) => {
     }
 }
 
-// like or dislike a post
+// save or unsave a post
 
 exports.savePost = async (req, res, next) => {
     const id = req.params.id
@@ -122,7 +122,6 @@ exports.savePost = async (req, res, next) => {
 
 exports.getTimelinePosts = async (req, res, next) => {
     const userId = req.params.id
-
 
     try {
         const timelinePosts = await User.aggregate([
@@ -213,6 +212,8 @@ exports.getTimelinePosts = async (req, res, next) => {
     }
 }
 
+// get saved posts
+
 exports.getSavedPosts = async (req, res, next) => {
     const userId = req.params.id
 
@@ -289,16 +290,24 @@ exports.getSavedPosts = async (req, res, next) => {
     }
 }
 
+// comment a post
+
 exports.commentPost = async (req, res, next) => {
     const postId = req.params.id
     const { userId, comment } = req.body
     try {
-        await Comment.create({ comments: comment, userId, postId })
-        res.status(200).json('Commented on this post.')
+        const newComment = await new Comment({ comments: comment, userId, postId }).save()
+        const newCommentUser = await User.findOne({ _id: ObjectId(newComment.userId) })
+        const { first_name, last_name, username, picture } = newCommentUser
+        const wholeComment = { ...newComment._doc, userData: { first_name, last_name, username, picture } }
+
+        res.status(200).json(wholeComment)
     } catch (error) {
         res.status(500).json(error)
     }
 }
+
+// get comments of a post
 
 exports.getPostComments = async (req, res, next) => {
     const postId = req.params.id
@@ -349,6 +358,8 @@ exports.getPostComments = async (req, res, next) => {
     }
 }
 
+// delete comments (soft delete)
+
 exports.deleteComment = async (req, res, next) => {
     const commentId = req.params.id
     const { userId } = req.body
@@ -365,6 +376,8 @@ exports.deleteComment = async (req, res, next) => {
     }
 }
 
+// edit comment of post
+
 exports.editComment = async (req, res, next) => {
     const commentId = req.params.id
     const { userId, newComment } = req.body
@@ -374,7 +387,12 @@ exports.editComment = async (req, res, next) => {
             res.status(200).json({ message: 'You are not authorized.' })
         } else {
             await Comment.findByIdAndUpdate(commentId, { comments: newComment, edited: true })
-            res.status(200).json({ message: "Comment edited." })
+            const editedComment = await Comment.findById(commentId)
+            const editedCommentUser = await User.findOne({ _id: ObjectId(editedComment.userId) })
+            const { first_name, last_name, username, picture } = editedCommentUser
+            const wholeEditedComment = { ...editedComment._doc, userData: { first_name, last_name, username, picture } }
+
+            res.status(200).json(wholeEditedComment)
         }
     } catch (error) {
         res.status(500).json(error)

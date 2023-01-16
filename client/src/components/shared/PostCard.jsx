@@ -4,13 +4,15 @@ import { useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import Comments from "../home/Comments";
 
-export default function PostCard({ eachFeed }) {
+export default function PostCard({ eachFeed, setPosts }) {
   const { user } = useSelector((state) => ({ ...state }));
   const [liked, setLiked] = useState(eachFeed.likes.includes(user.id));
   const [likes, setLikes] = useState(eachFeed.likes.length);
   const [allComments, setAllComments] = useState([]);
   const [showComments, setShowComments] = useState(false);
-  const [bookmarked, setBookmarked] = useState(eachFeed.savedBy.includes(user.id));
+  const [bookmarked, setBookmarked] = useState(
+    eachFeed.savedBy.includes(user.id)
+  );
   const commentRef = useRef();
   const BaseUrl = process.env.REACT_APP_BACKEND_URL;
 
@@ -28,7 +30,12 @@ export default function PostCard({ eachFeed }) {
         userId: user.id,
         comment: commentInput,
       })
-      .then((response) => resetComment());
+      .then((response) => {
+        console.log(response.data);
+        console.log(setAllComments);
+        setAllComments((prev) => [response.data, ...prev]);
+        resetComment();
+      });
   };
 
   const resetComment = () => {
@@ -36,16 +43,15 @@ export default function PostCard({ eachFeed }) {
   };
 
   const handleLike = async () => {
-    setLiked(prev => !prev)
+    setLiked((prev) => !prev);
     await axios
       .put(`${BaseUrl}/${eachFeed._id}/like`, {
         userId: user.id,
       })
       .then((response) => {
         console.log(response);
-        liked ? setLikes(prev => prev - 1) : setLikes(prev => prev + 1)
+        liked ? setLikes((prev) => prev - 1) : setLikes((prev) => prev + 1);
       });
-    
   };
 
   const handleBookmark = async () => {
@@ -54,9 +60,11 @@ export default function PostCard({ eachFeed }) {
         userId: user.id,
       })
       .then((response) => {
-        console.log(response);
-        setBookmarked(prev => !prev)
-      });
+        setBookmarked((prev) => !prev);
+        if(bookmarked === true){
+          setPosts((prev) => [...prev].filter((f) => f._id !== eachFeed._id))}
+        }
+      );
   };
 
   return (
@@ -214,13 +222,21 @@ export default function PostCard({ eachFeed }) {
                   placeholder={`Comment as @${user.username}`}
                 />
               </div>
-              <i className="uil uil-message" onClick={postComment} style={{cursor: 'pointer'}}></i>
+              <i
+                className="uil uil-message"
+                onClick={postComment}
+                style={{ cursor: "pointer" }}
+              ></i>
             </div>
             <div className="comments-feed">
-              {allComments &&
-                allComments.map((each, id) => (
-                  <Comments key={id} eachComments={each} />
-                ))}
+                {allComments &&
+                  allComments.map((each, id) => (
+                    <Comments
+                      key={id}
+                      eachComments={each}
+                      setAllComments={setAllComments}
+                    />
+                  ))}
             </div>
           </div>
         )}

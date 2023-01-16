@@ -1,25 +1,16 @@
 import axios from "axios";
 import { Image } from "cloudinary-react";
-import React, { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 
-export default function Comments({ eachComments }) {
+export default function Comments({ eachComments, setAllComments }) {
   const { user } = useSelector((state) => ({ ...state }));
-  const [ownComment, setOwnComment] = useState(false);
+  const [ownComment, setOwnComment] = useState(eachComments.userId === user.id);
   const [showEdit, setShowEdit] = useState(false);
-  const [editedComment, setEditedComment] = useState(false);
+  const [editedComment, setEditedComment] = useState(eachComments.edited);
 
   const editCommentRef = useRef();
-
-  useEffect(() => {
-    if (eachComments.userId === user.id) {
-      setOwnComment(true);
-    }
-    if (eachComments.edited === true) {
-      setEditedComment(true);
-    }
-  }, [user.id, ownComment, eachComments.userId, eachComments.edited]);
 
   const deleteComment = async (commentId) => {
     const confirm = window.confirm("Really want to delete this comment?");
@@ -32,8 +23,10 @@ export default function Comments({ eachComments }) {
           }
         )
         .then((response) => {
-          console.log(response);
-        });
+          setAllComments((prev) =>
+            [...prev].filter((f) => f._id !== commentId)
+          );
+        }).catch((error) => console.log(error))
     }
   };
   const editComment = async (commentId) => {
@@ -69,7 +62,7 @@ export default function Comments({ eachComments }) {
           </div>
           <div className="comment-info">
             <h5 className="text-muted">
-              <i>@{eachComments.userData.username}</i>
+              <i>@{eachComments?.userData?.username}</i>
             </h5>
             {!showEdit ? (
               <div className="comments">{eachComments.comments}</div>
@@ -92,7 +85,7 @@ export default function Comments({ eachComments }) {
             {/* <small>Dubai, 15 MINUTES AGO</small> */}
             <div className="comment-actions">
               {ownComment && (
-                <div style={{display: 'flex', gap: '.5rem'}}>
+                <div style={{ display: "flex", gap: ".5rem" }}>
                   <Link
                     className="text-muted"
                     onClick={() => setShowEdit(true)}
@@ -108,7 +101,14 @@ export default function Comments({ eachComments }) {
                 </div>
               )}
               {editedComment ? (
-                <p className="text-muted" style={{ fontSize: ".7rem", marginLeft: 'auto', marginRight: '1rem' }}>
+                <p
+                  className="text-muted"
+                  style={{
+                    fontSize: ".7rem",
+                    marginLeft: "auto",
+                    marginRight: "1rem",
+                  }}
+                >
                   Edited
                 </p>
               ) : (

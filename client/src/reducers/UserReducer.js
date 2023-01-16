@@ -8,10 +8,6 @@ export function userReducer(
             return action.payload
         case "LOGOUT":
             return state = null 
-        case "FOLLOW":
-            return {...state, following: [...state.following, action.payload]} 
-        case "UNFOLLOW":
-            return {...state, following: [...state.following.filter(f => f !== action.payload)]} 
         default: 
             return state
     }

@@ -1,6 +1,6 @@
 import axios from "axios";
 import React, { useEffect, useRef, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import Friends from "./Friends";
 import Conversation from "./Conversation";
 import ChatBox from "./ChatBox";
@@ -8,7 +8,6 @@ import { io } from "socket.io-client";
 
 export default function RightPart() {
   const { user } = useSelector((state) => ({ ...state }));
-  const dispatch = useDispatch()
   const [currentUser, setCurrentUser] = useState({});
   const [friends, setFriends] = useState([]);
   const [notFriends, setNotFriends] = useState([]);
@@ -25,9 +24,11 @@ export default function RightPart() {
       })
       .then((res) => {
           if(title === 'follow'){
-            dispatch({ type: "FOLLOW", payload: id })
+            setNotFriends(prev => [...prev].filter(f => f._id !== id))
+            setFriends(prev => [res.data,...prev])
           } else {
-            dispatch({ type: "UNFOLLOW", payload: id })
+            setFriends(prev => [...prev].filter(f => f._id !== id))
+            setNotFriends(prev => [res.data,...prev])
           }
       }).catch(error => console.log(error))
   };
@@ -122,7 +123,7 @@ export default function RightPart() {
             title="Friends"
             name={eachFriend.username}
             picture={eachFriend.picture}
-            key={id}
+            key={eachFriend._id}
             id={eachFriend._id}
             handleFollow={handleFollow}
           />
@@ -135,7 +136,7 @@ export default function RightPart() {
             title="People you may know"
             name={eachNotFriend.username}
             picture={eachNotFriend.picture}
-            key={id}
+            key={eachNotFriend._id}
             id={eachNotFriend._id}
             handleFollow={handleFollow}
           />

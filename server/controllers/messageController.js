@@ -1,5 +1,7 @@
 const Message = require('../models/messageModel')
 
+// create a message
+
 exports.createMessage = async (req, res) => {
     const newMessage = new Message(req.body)
 

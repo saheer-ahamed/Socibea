@@ -5,7 +5,6 @@ exports.authUser = async (req, res, next) => {
         let tmp = req.header("Authorization")
         
         const token = tmp ? tmp.slice(7, tmp.length) : ''
-        console.log(token);
         if(!token){
             return res.status(400).json({ message: "Invalid Authentification"})
         }
@@ -22,6 +21,5 @@ exports.authUser = async (req, res, next) => {
 }
 
 exports.auth = (req, res) => {
-    console.log(req.user)
     res.json("Welcome")
 }

@@ -21,11 +21,14 @@ export default function Friends({ title, name, picture, id, handleFollow }) {
 
             <div className="follow">
               <span
-                className="btn-follow btn-primary"
-                onClick={() => handleFollow(id, 'unfollow')}
+                className="btn-follow btn-primary unfollow"
+                onClick={() => handleFollow(id, "unfollow")}
               >
                 <i className="uil uil-check" style={{ fontSize: "1rem" }}></i>{" "}
-                Following
+                <span id="unfollow">
+                  Unfollow
+                </span>
+                <span id="following">Following</span>
               </span>
             </div>
           </div>
@@ -49,7 +52,7 @@ export default function Friends({ title, name, picture, id, handleFollow }) {
             <div className="follow">
               <span
                 className="btn-follow btn-primary"
-                onClick={() => handleFollow(id, 'follow')}
+                onClick={() => handleFollow(id, "follow")}
               >
                 <i className="uil uil-plus" style={{ fontSize: "1rem" }}></i>{" "}
                 Follow

@@ -1,5 +1,8 @@
 const Conversation = require('../models/conversationModel')
 
+
+// create a conversation
+
 exports.createConversation = async (req, res) => {
     const newConversation = new Conversation({
         members: [req.body.senderId, req.body.receiverId]
@@ -12,6 +15,8 @@ exports.createConversation = async (req, res) => {
         res.status(200).json(error)
     }
 }
+
+// get a conversation details
 
 exports.getConversation = async (req, res) => {
     try {

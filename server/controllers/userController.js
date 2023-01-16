@@ -4,7 +4,11 @@ const bcrypt = require('bcrypt');
 const { generateToken } = require('../helpers/tokens');
 const { sendVerificationEmail } = require('../helpers/mailer');
 const jwt = require('jsonwebtoken');
+const Conversation = require('../models/conversationModel');
 const ObjectId = require('mongoose').Types.ObjectId
+
+
+// user registration
 
 exports.register = async (req, res, next) => {
     try {
@@ -47,7 +51,7 @@ exports.register = async (req, res, next) => {
             })
         }
 
-        if (password !== confirmPassword){
+        if (password !== confirmPassword) {
             return res.status(400).json({
                 message: "Both passwords must be same."
             })
@@ -96,6 +100,8 @@ exports.register = async (req, res, next) => {
     }
 }
 
+// activating account
+
 exports.activateAccount = async (req, res, next) => {
     try {
         const { token } = req.body;
@@ -114,6 +120,8 @@ exports.activateAccount = async (req, res, next) => {
 
 }
 
+// user login
+
 exports.login = async (req, res, next) => {
     try {
         const { email, password } = req.body
@@ -122,7 +130,7 @@ exports.login = async (req, res, next) => {
             return res.status(400).json({
                 message: "The email address you entered is not connected to an Account."
             })
-        } 
+        }
 
         const check = await bcrypt.compare(password, user.password)
         if (!check) {
@@ -153,6 +161,8 @@ exports.login = async (req, res, next) => {
     }
 }
 
+// get a user details
+
 exports.getUser = async (req, res, next) => {
     const userId = req.params.userId
     try {
@@ -166,6 +176,8 @@ exports.getUser = async (req, res, next) => {
     }
 }
 
+// get users details
+
 exports.getUsers = async (req, res, next) => {
     try {
         const users = await User.find({})
@@ -174,6 +186,8 @@ exports.getUsers = async (req, res, next) => {
         res.status(500).json({ message: error.message })
     }
 }
+
+// get details of my followings and non-followings
 
 exports.getOtherUsers = async (req, res, next) => {
     const userId = req.params.id
@@ -241,11 +255,25 @@ exports.handleFollow = async (req, res, next) => {
             if (!followUser.followers.includes(userId)) {
                 await followUser.updateOne({ $push: { followers: userId } })
                 await followingUser.updateOne({ $push: { following: id } })
-                res.status(200).json("User followed.")
+
+                const conversation = await Conversation.find({
+                    members: { $all: [userId, id] }
+                })
+
+
+                if (conversation.length === 0) {
+                    const newConversation = new Conversation({
+                        members: [userId, id]
+                    })
+
+                    const savedConversation = await newConversation.save()
+                }
+
+                res.status(200).json(followUser._doc)
             } else {
                 await followUser.updateOne({ $pull: { followers: userId } })
                 await followingUser.updateOne({ $pull: { following: id } })
-                res.status(403).json("User unfollowed.")
+                res.status(403).json(followUser._doc)
             }
 
         } catch (error) {

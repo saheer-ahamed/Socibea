@@ -8,7 +8,7 @@ import PostCard from "../shared/PostCard";
 export default function bookmarkPosts() {
   const { user } = useSelector((state) => ({ ...state }));
   const [loading, setLoading] = useState(false);
-  const [post, setPost] = useState([]);
+  const [posts, setPosts] = useState([]);
   useEffect(() => {
     setLoading(true);
     // setTimeout(() => {
@@ -18,13 +18,13 @@ export default function bookmarkPosts() {
       await axios
         .get(`${process.env.REACT_APP_BACKEND_URL}/${user.id}/savedPosts`)
         .then((response) => {
-          setPost(response.data);
+          setPosts(response.data);
           setLoading(false);
         })
         .catch((error) => console.log(error));
     };
     fetchPosts();
-  }, [user.id, setPost]);
+  }, [user.id, setPosts]);
 
   return (
     <>
@@ -41,8 +41,8 @@ export default function bookmarkPosts() {
           <SkeletonStyle style={{ margin: "1rem" }} />
         </div>
       )}
-      {post.map((eachFeed, id) => (
-        <PostCard eachFeed={eachFeed} key={id} />
+      {posts.map((eachFeed) => (
+        <PostCard eachFeed={eachFeed} key={eachFeed._id} setPosts={setPosts}/>
       ))}
     </>
   );

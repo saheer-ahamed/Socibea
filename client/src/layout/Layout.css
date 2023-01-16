@@ -40,6 +40,18 @@ img {
     gap: .2rem;
 }
 
+#unfollow{
+    display: none;
+}
+
+.btn-follow.unfollow:hover #unfollow{
+    display: block;
+}
+
+.btn-follow.unfollow:hover #following{
+    display: none;
+}
+
 .btn-follow:hover {
     opacity: .8;
 }
@@ -78,12 +90,20 @@ nav .container {
     justify-content: space-between
 }
 
+nav .navLogo{
+    display: flex;
+    align-items: center;
+    gap:.6rem;
+    cursor: pointer
+}
+
 .search-bar {
     background: var(--color-light);
     border-radius: var(--border-radius);
     padding: var(--search-padding);
     display: flex;
     align-items: center;
+    margin-left: -4rem;
 }
 
 .search-bar input[type="search"] {
@@ -101,11 +121,20 @@ nav .search-bar input[type="search"]::placeholder {
 nav .create {
     display: flex;
     align-items: center;
-    gap: 2rem
+    gap: 1rem
 }
 
 nav .navuser {
     cursor: pointer;
+    margin-right: 2rem;
+}
+
+nav .navuser i {
+    font-size: 2rem;
+}
+
+nav .navuser:hover{
+    transform: scale(1.1);
 }
 
 /* ================== MAIN ==================== */
