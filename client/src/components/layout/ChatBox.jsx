@@ -14,7 +14,7 @@ export default function ChatBox({ currentChat, showChat, socket }) {
   const scrollRef = useRef();
 
   useEffect(() => {
-    socket.current.on("getMessage", (data) => {
+    socket.on("getMessage", (data) => {
       setArrivalMessage({
         sender: data.senderId,
         text: data.text,
@@ -62,28 +62,27 @@ export default function ChatBox({ currentChat, showChat, socket }) {
   }, [messages]);
 
   const chatSubmit = async () => {
-    if(newMessage.trim.length !== 0){
-      const message = {
-        sender: user.id,
-        text: newMessage,
-        conversationId: currentChat._id,
-      };
-  
-      const receiverId = currentChat.members.find((member) => member !== user.id);
-  
-      socket.current.emit("sendMessage", {
-        text: newMessage,
-        senderId: user.id,
-        receiverId,
-      });
-  
-      try {
-        const res = await axios.post(`${BACKEND_URL}/messages`, message);
-        setMessages([...messages, res.data]);
-        setNewMessage("");
-      } catch (error) {
-        console.log(error);
-      }
+    if (newMessage.trim().length === 0) return;
+    const message = {
+      sender: user.id,
+      text: newMessage,
+      conversationId: currentChat._id,
+    };
+
+    const receiverId = currentChat.members.find((member) => member !== user.id);
+
+    socket.emit("sendMessage", {
+      text: newMessage,
+      senderId: user.id,
+      receiverId,
+    });
+
+    try {
+      const res = await axios.post(`${BACKEND_URL}/messages`, message);
+      setMessages([...messages, res.data]);
+      setNewMessage("");
+    } catch (error) {
+      console.log(error);
     }
   };
 

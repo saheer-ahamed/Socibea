@@ -714,11 +714,7 @@ main .container .right {
 
 .right .message .profile-picture {
     position: relative;
-    overflow: visible
-}
-
-.right .message .profile-picture img {
-    border-radius: 50%
+    overflow: hidden;
 }
 
 .right .messages .message p {

@@ -1,4 +1,4 @@
-const io = require("socket.io")(7000, {
+const io = require("socket.io")(process.env.SOCKET_PORT, {
     cors: {
         origin: "http://localhost:3000"
     }
@@ -36,7 +36,7 @@ io.on("connection", (socket) => {
         })
     })
     
-    // when disconnect
+    // when a user disconnect
     socket.on("disconnect", () => {
         console.log("a user disconnected");
         removeUser(socket.id)

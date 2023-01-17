@@ -14,9 +14,9 @@ export default function RightPart() {
   // const [onlineUsers, setOnlineUsers] = useState(false);
   const [conversations, setConversations] = useState([]);
   const [currentChat, setCurrentChat] = useState(null);
-  const socket = useRef();
+  // const socket = useRef();
   const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
-
+  const socket = io.connect("ws://localhost:8000");
   const handleFollow = async (id, title) => {
     await axios
       .put(`${process.env.REACT_APP_BACKEND_URL}/${id}/handleFollow`, {
@@ -40,13 +40,13 @@ export default function RightPart() {
         .then((res) => setCurrentUser(res.data));
     };
 
-    socket.current = io("ws://localhost:7000");
+
     getUserDetails();
   }, [user.id, BACKEND_URL]);
 
   useEffect(() => {
-    socket.current.emit("addUser", user.id);
-    socket.current.on("getUsers", (users) => {
+    socket.emit("addUser", user.id);
+    socket.on("getUsers", (users) => {
       console.log(users);
     });
   }, [conversations, currentUser, user]);
