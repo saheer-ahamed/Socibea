@@ -5,7 +5,7 @@ const { readdirSync } = require('fs')
 const app = express()
 const mongoose = require('mongoose')
 const options = {
-    origin: ["https://localhost:3000","https://socibea.netlify.app"],
+    origin: ['http://localhost:3000', 'https://socibea.netlify.app'],
     useSuccessStatus: 200
 }
 const { createServer } = require('http')
