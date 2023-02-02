@@ -187,7 +187,7 @@ export default function Profile() {
             src={userData?.cover ? userData?.cover : coverPic}
             alt="Cover pic"
             onClick={() => {
-              coverRef.current.click();
+              if(user.id === params?.id) coverRef.current.click();
             }}
           />
           <img
@@ -198,7 +198,7 @@ export default function Profile() {
             }
             alt="DP"
             onClick={() => {
-              profileRef.current.click();
+              if(user.id === params?.id) profileRef.current.click();
             }}
           />
         </div>
