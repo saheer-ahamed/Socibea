@@ -92,9 +92,11 @@ export default function Auth() {
               <i className="fas fa-lock"></i>
               <input type="password" placeholder="Password" ref={passwordRef} />
             </div>
-            {loading && <BeatLoader color="var(--color-primary)"/>}
+            {loading && <BeatLoader color="var(--color-primary)" />}
             <input type="submit" value="Login" className="auth-btn solid" />
-            <Link to='#' className="auth-forgot">Forgot Password?</Link>
+            <Link to="#" className="auth-forgot">
+              Forgot Password?
+            </Link>
           </form>
           <form className="sign-up-form" onSubmit={handleSignup}>
             <h2 className="title">Sign up</h2>
@@ -126,7 +128,7 @@ export default function Auth() {
                 ref={confirmPassRef}
               />
             </div>
-            {regLoading && <BeatLoader color="var(--color-primary)"/>}
+            {regLoading && <BeatLoader color="var(--color-primary)" />}
             <input type="submit" className="auth-btn" value="Sign up" />
           </form>
         </div>
@@ -137,8 +139,9 @@ export default function Auth() {
           <div className="contentAuth">
             <h3>New here ?</h3>
             <p>
-              Lorem ipsum, dolor sit amet consectetur adipisicing elit. Debitis,
-              ex ratione. Aliquid!
+              <i>
+                Let's post your vibes 'n' chill with friends all over the world!✨
+              </i>
             </p>
             <button
               className="auth-btn transparent"
@@ -154,8 +157,9 @@ export default function Auth() {
           <div className="contentAuth">
             <h3>One of us ?</h3>
             <p>
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Nostrum
-              laboriosam ad deleniti.
+              <i>
+                What's keep you waiting? Come in, chill!!🌹 
+              </i>
             </p>
             <button
               className="auth-btn transparent"

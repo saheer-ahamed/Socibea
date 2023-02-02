@@ -3,13 +3,15 @@ import { useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import RingLoader from "react-spinners/RingLoader";
 import toast from "react-hot-toast";
+import { useMediaQuery } from "react-responsive";
 
-export default function CreatePost({setPost}) {
+export default function CreatePost({ setPost }) {
   const { user } = useSelector((state) => ({ ...state }));
   const [image, setImage] = useState(null);
   const [video, setVideo] = useState(null);
   const desc = useRef();
   const imageRef = useRef();
+  const isTabletOrMobile = useMediaQuery({ query: "(min-width: 568px)" });
 
   const [loading, setLoading] = useState(false);
 
@@ -42,7 +44,7 @@ export default function CreatePost({setPost}) {
         .post(`${process.env.REACT_APP_BACKEND_URL}/post`, postData)
         .then((res) => {
           setLoading(false);
-          setPost(prevState => [res.data, ...prevState])
+          setPost((prevState) => [res.data, ...prevState]);
           toast.success("Post Successfully uploaded!", {
             style: {
               borderRadius: "10px",
@@ -153,7 +155,7 @@ export default function CreatePost({setPost}) {
             <span>
               <i className="uil uil-image-v"></i>
             </span>
-            Photo
+            {isTabletOrMobile && "Photo"}
           </div>
           <div
             className="option"
@@ -165,13 +167,13 @@ export default function CreatePost({setPost}) {
             <span>
               <i className="uil uil-presentation-play"></i>
             </span>
-            Video
+            {isTabletOrMobile && "Video"}
           </div>
           <div className="option" style={{ color: "var(--color-danger)" }}>
             <span>
               <i className="uil uil-schedule"></i>
             </span>
-            Schedule
+            {isTabletOrMobile && "Schedule"}
           </div>
           <div style={{ display: "none" }}>
             <input

@@ -1,4 +1,4 @@
-const { validateEmail, validateLength, validateUsername } = require('../helpers/validation');
+const { validateEmail, validateLength, validateUsername, validatePassword } = require('../helpers/validation');
 const User = require('../models/userModel')
 const bcrypt = require('bcrypt');
 const { generateToken } = require('../helpers/tokens');
@@ -45,9 +45,9 @@ exports.register = async (req, res, next) => {
             })
         }
 
-        if (!validateLength(password, 6, 60)) {
+        if (!validatePassword(password)) {
             return res.status(400).json({
-                message: "Password must be atleast 6 characters."
+                message: "Password must have atleast one lowercase letter, one uppercase letter, one symbol and minimum of 8 characters."
             })
         }
 
@@ -182,6 +182,56 @@ exports.getUsers = async (req, res, next) => {
     try {
         const users = await User.find({})
         res.status(200).json(users)
+    } catch (error) {
+        res.status(500).json({ message: error.message })
+    }
+}
+
+// update user profile picture
+
+exports.updateProfile = async (req, res, next) => {
+    try {
+        const id = req.params.id
+        const { picture } = req.body
+
+        await User.findByIdAndUpdate(id, { picture })
+        const user = await User.aggregate([
+            {
+                $match: { _id: ObjectId(id) }
+            },
+            {
+                $project: {
+                    _id: 0,
+                    picture: 1
+                }
+            }
+        ])
+        res.status(200).json(user[0])
+    } catch (error) {
+        res.status(500).json({ message: error.message })
+    }
+}
+
+// update user cover picture
+
+exports.updateCover = async (req, res, next) => {
+    try {
+        const id = req.params.id
+        const { picture } = req.body
+
+        await User.findByIdAndUpdate(id, { cover: picture })
+        const user = await User.aggregate([
+            {
+                $match: { _id: ObjectId(id) }
+            },
+            {
+                $project: {
+                    _id: 0,
+                    cover: 1
+                }
+            }
+        ])
+        res.status(200).json(user[0])
     } catch (error) {
         res.status(500).json({ message: error.message })
     }

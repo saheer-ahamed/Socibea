@@ -14,7 +14,7 @@ export default function Friends({ title, name, picture, id, handleFollow }) {
                 alt=""
               />
             </div>
-            <div>
+            <div className="infoName">
               <h5>{name}</h5>
               {/* <h6 className="text-muted">8 mutual friends</h6> */}
             </div>
@@ -25,9 +25,6 @@ export default function Friends({ title, name, picture, id, handleFollow }) {
                 onClick={() => handleFollow(id, "unfollow")}
               >
                 <i className="uil uil-check" style={{ fontSize: "1rem" }}></i>{" "}
-                <span id="unfollow">
-                  Unfollow
-                </span>
                 <span id="following">Following</span>
               </span>
             </div>
@@ -44,7 +41,7 @@ export default function Friends({ title, name, picture, id, handleFollow }) {
                 alt=""
               />
             </div>
-            <div>
+            <div className="infoName">
               <h5>{name}</h5>
               {/* <h6 className="text-muted">8 mutual friends</h6> */}
             </div>

@@ -1,5 +1,13 @@
+import ProfilePosts from "../../components/profile/ProfilePosts";
+
 export default function Profile() {
   return (
-    <div>Profile</div>
+    <>
+      <div className="middle">
+        <div className="feeds">
+          <ProfilePosts />
+        </div>
+      </div>
+    </>
   )
 }

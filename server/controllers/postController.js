@@ -58,16 +58,16 @@ exports.deletePost = async (req, res, next) => {
     const { userId } = req.body
 
     try {
-
         const post = await Post.findById(id)
         if (post.userId === userId) {
-            await post.deleteOne()
-            res.status(200).json("Post deleted successfully.")
+            await Post.updateOne({ _id: id }, { $set: { "deleted": true } })
+            res.status(200).json("Post deleted successfully!")
         } else {
             res.status(403).json("Action Forbidden")
         }
 
     } catch (error) {
+        console.log(error);
         res.status(500).json(error)
     }
 }
@@ -165,6 +165,9 @@ exports.getTimelinePosts = async (req, res, next) => {
                 }
             },
             {
+                $match: { "allPosts.deleted": false }
+            },
+            {
                 $addFields: {
                     objId: { $toObjectId: "$allPosts.userId" }
                 }
@@ -256,6 +259,9 @@ exports.getSavedPosts = async (req, res, next) => {
                 }
             },
             {
+                $match: { "savedPostData.deleted": false }
+            },
+            {
                 $addFields: {
                     objIds: { $toObjectId: "$savedPostData.userId" }
                 }
@@ -285,6 +291,65 @@ exports.getSavedPosts = async (req, res, next) => {
             }
         ])
         res.status(200).json(userSavedPosts)
+    } catch (error) {
+        res.status(500).json(error)
+    }
+}
+
+// get each user posts
+
+exports.getUserPosts = async (req, res, next) => {
+    const userId = req.params.id
+    try {
+        const userPosts = await User.aggregate([
+            {
+                $match: {
+                    _id: ObjectId(userId)
+                }
+            },
+            {
+                $addFields: {
+                    stringUserId: { $toString: "$_id" }
+                }
+            },
+            {
+                $lookup: {
+                    from: 'posts',
+                    localField: 'stringUserId',
+                    foreignField: 'userId',
+                    as: 'userPosts'
+                }
+            },
+            {
+                $project: {
+                    userPosts: 1,
+                    username: 1,
+                    first_name: 1,
+                    last_name: 1,
+                    picture: 1,
+                    _id: 0
+                }
+            },
+            {
+                $unwind: {
+                    path: "$userPosts"
+                }
+            },
+            {
+                $match: { "userPosts.deleted": false }
+            },
+            {
+                $replaceRoot: {
+                    newRoot: {
+                        $mergeObjects: ['$userPosts', '$$ROOT']
+                    }
+                }
+            },
+            {
+                $sort: { createdAt: -1 }
+            }
+        ])
+        res.status(200).json(userPosts)
     } catch (error) {
         res.status(500).json(error)
     }

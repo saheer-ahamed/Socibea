@@ -10,7 +10,8 @@ const PostSchema = mongoose.Schema({
     }],
     savedBy: [],
     image: String,
-    video: String
+    video: String,
+    deleted: false
 },
     {
         timestamps: true

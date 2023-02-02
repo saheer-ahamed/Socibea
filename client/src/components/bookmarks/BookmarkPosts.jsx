@@ -2,7 +2,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { SkeletonStyle } from "../Loader/SkeletonStyle";
+import { SkeletonStyle } from "../loader/SkeletonStyle";
 import PostCard from "../shared/PostCard";
 
 export default function bookmarkPosts() {
@@ -11,17 +11,13 @@ export default function bookmarkPosts() {
   const [posts, setPosts] = useState([]);
   useEffect(() => {
     setLoading(true);
-    // setTimeout(() => {
-    //   ;
-    // }, 3000);
     const fetchPosts = async () => {
       await axios
         .get(`${process.env.REACT_APP_BACKEND_URL}/${user.id}/savedPosts`)
         .then((response) => {
           setPosts(response.data);
-          setLoading(false);
         })
-        .catch((error) => console.log(error));
+        .catch((error) => console.log(error)).finally(() => setLoading(false))
     };
     fetchPosts();
   }, [user.id, setPosts]);
@@ -29,8 +25,11 @@ export default function bookmarkPosts() {
   return (
     <>
       <span className="bookmark_title">
-        <i className="uil uil-bookmark-full" style={{fontSize: "2rem", color: "green"}}/>
-        <h2 className="text-muted" style={{textDecoration: "underline"}}>
+        <i
+          className="uil uil-bookmark-full"
+          style={{ fontSize: "2rem", color: "green" }}
+        />
+        <h2 className="text-muted" style={{ textDecoration: "underline" }}>
           BOOKMARKS
         </h2>
       </span>
@@ -42,7 +41,7 @@ export default function bookmarkPosts() {
         </div>
       )}
       {posts.map((eachFeed) => (
-        <PostCard eachFeed={eachFeed} key={eachFeed._id} setPosts={setPosts}/>
+        <PostCard eachFeed={eachFeed} key={eachFeed._id} setPosts={setPosts} />
       ))}
     </>
   );

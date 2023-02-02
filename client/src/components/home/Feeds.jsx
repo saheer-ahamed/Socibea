@@ -1,7 +1,7 @@
 import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { SkeletonStyle } from "../Loader/SkeletonStyle";
+import { SkeletonStyle } from "../loader/SkeletonStyle";
 import PostCard from "../shared/PostCard";
 
 export default function Feeds({post, setPost}) {

@@ -16,21 +16,22 @@ export default function RightPart() {
   const [currentChat, setCurrentChat] = useState(null);
   // const socket = useRef();
   const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
-  const socket = io.connect("ws://socibea.pryingchess.site");
+  const socket = io.connect("ws://localhost:8000");
   const handleFollow = async (id, title) => {
     await axios
       .put(`${process.env.REACT_APP_BACKEND_URL}/${id}/handleFollow`, {
         userId: user.id,
       })
       .then((res) => {
-          if(title === 'follow'){
-            setNotFriends(prev => [...prev].filter(f => f._id !== id))
-            setFriends(prev => [res.data,...prev])
-          } else {
-            setFriends(prev => [...prev].filter(f => f._id !== id))
-            setNotFriends(prev => [res.data,...prev])
-          }
-      }).catch(error => console.log(error))
+        if (title === "follow") {
+          setNotFriends((prev) => [...prev].filter((f) => f._id !== id));
+          setFriends((prev) => [res.data, ...prev]);
+        } else {
+          setFriends((prev) => [...prev].filter((f) => f._id !== id));
+          setNotFriends((prev) => [res.data, ...prev]);
+        }
+      })
+      .catch((error) => console.log(error));
   };
 
   useEffect(() => {
@@ -89,28 +90,21 @@ export default function RightPart() {
             <h4>Messages</h4>
             <i className="uil uil-edit" />
           </div>
-          {/* ========== SEARCH BAR ========== */}
-          {/* <div className="search-bar">
-            <i className="uil uil-search"></i>
-            <input
-              type="search"
-              placeholder="Search Conversations"
-              id="message-search"
-            />
-          </div> */}
           {/* ========== MESSAGES CATEGORY ========== */}
           <div className="category">
             <h5 className="active">Primary Conversations</h5>
           </div>
           {/* ========== MESSAGE ========== */}
-          {conversations.map((c, id) => (
-            <Conversation
-              conversation={c}
-              key={id}
-              currentChat={showChat}
-              currentUser={user}
-            />
-          ))}
+          <div className="messagesContainer">
+            {conversations.map((c, id) => (
+              <Conversation
+                conversation={c}
+                key={id}
+                currentChat={showChat}
+                currentUser={user}
+              />
+            ))}
+          </div>
         </div>
         {/* =============== END OF MESSAGES =============== */}
         {/* =============== FRIEND REQUESTS =============== */}

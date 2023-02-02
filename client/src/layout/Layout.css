@@ -40,18 +40,6 @@ img {
     gap: .2rem;
 }
 
-#unfollow{
-    display: none;
-}
-
-.btn-follow.unfollow:hover #unfollow{
-    display: block;
-}
-
-.btn-follow.unfollow:hover #following{
-    display: none;
-}
-
 .btn-follow:hover {
     opacity: .8;
 }
@@ -90,10 +78,10 @@ nav .container {
     justify-content: space-between
 }
 
-nav .navLogo{
+nav .navLogo {
     display: flex;
     align-items: center;
-    gap:.6rem;
+    gap: .6rem;
     cursor: pointer
 }
 
@@ -133,7 +121,7 @@ nav .navuser i {
     font-size: 2rem;
 }
 
-nav .navuser:hover{
+nav .navuser:hover {
     transform: scale(1.1);
 }
 
@@ -335,30 +323,6 @@ main .container .left .profile {
     z-index: 2
 }
 
-/* .middle .stories .story:nth-child(1) {
-    background: url(../images/story-1.jpg) no-repeat center center/cover
-}
-
-.middle .stories .story:nth-child(2) {
-    background: url(../images/story-2.jpg) no-repeat center center/cover
-}
-
-.middle .stories .story:nth-child(3) {
-    background: url(../images/story-3.jpg) no-repeat center center/cover
-}
-
-.middle .stories .story:nth-child(4) {
-    background: url(../images/story-4.jpg) no-repeat center center/cover
-}
-
-.middle .stories .story:nth-child(5) {
-    background: url(../images/story-5.jpg) no-repeat center center/cover
-}
-
-.middle .stories .story:nth-child(6) {
-    background: url(../images/story-6.jpg) no-repeat center center/cover
-} */
-
 .middle .story .profile-picture {
     width: 2rem;
     height: 2rem;
@@ -440,6 +404,116 @@ main .container .left .profile {
     margin-bottom: 1rem;
 }
 
+/* ================== PROFILE CARD ==================== */
+
+.ProfileCard{
+    border-radius: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    gap: 1rem;
+    overflow-x: clip;
+    background: var(--color-white);
+}
+
+.ProfileImages{
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.ProfileImages > img:nth-of-type(1){
+    width: 100%;
+    height: 10rem;
+    object-fit: cover;
+    cursor: pointer;
+}
+
+.ProfileImages > img:nth-of-type(1):hover{
+    opacity: .5;
+}
+
+.ProfileImages > img:nth-of-type(2){
+    width: 6rem;
+    border-radius: 50%;
+    position: absolute;
+    bottom: -3rem;
+    box-shadow: var(--profileShadow);
+    cursor: pointer;
+}
+
+.ProfileImages > img:nth-of-type(2):hover{
+    opacity: .8;
+}
+
+.ProfileName{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 3rem 0 0 0;
+    gap: 10px;
+}
+
+.ProfileName>span:nth-of-type(1){
+    font-weight: bold;
+}
+
+.followStatus{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: .75rem;
+}
+
+.followStatus > hr{
+    width: 85%;
+    border: 1px solid var(--color-gray);
+}
+
+.followStatus > div{
+    display: flex;
+    gap: 1rem;
+    width: 80%;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.follow{
+    display: flex;
+    flex-direction: column;
+    gap: .4rem;
+    align-items: center;
+    justify-content: center;
+}
+
+.follow > span:nth-of-type(1){
+    font-weight: bold;
+}
+
+.follow > span:nth-of-type(2){
+    color: var(--color-gray);
+    font-size: 13px;
+}
+
+.vl{
+    height: 100%;
+    border-left: 2px solid var(--color-gray);
+}
+
+.ProfileCard > span{
+    font-weight: bold;
+    color: orange;
+    align-self: center;
+    margin: 0 0 1rem 0;
+    cursor: pointer;
+}
+
+/* ================== PROFILE CARD ==================== */
+
+
 /* ================== FEEDS ==================== */
 
 .middle .feeds {
@@ -464,6 +538,43 @@ main .container .left .profile {
     display: flex;
     gap: 1rem;
     align-items: center;
+    cursor: pointer;
+}
+
+.customBtn {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.edit {
+    cursor: pointer;
+    align-self: flex-end;
+}
+
+.dropdown {
+    font-size: .7rem;
+    background: var(--color-dark);
+    color: var(--color-light);
+    padding: .2rem;
+    border-radius: .3rem;
+    transition: all 0.5s ease;
+    right: 0;
+    margin-top: 2rem;
+    position: absolute;
+    cursor: pointer;
+    display: none;
+}
+
+.edit:hover + .dropdown{
+    display: block;
+}
+
+edit:hover,.dropdown:hover {
+  opacity: .7;
+  display: block;
 }
 
 .middle .feed .photo {
@@ -659,7 +770,26 @@ main .container .right {
 .right .messages {
     background: var(--color-white);
     border-radius: var(--card-border-radius);
-    padding: var(--card-padding)
+    padding: var(--card-padding);
+}
+
+.right .messages .messagesContainer {
+    height: 20rem;
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
+
+.messagesContainer::-webkit-scrollbar-thumb {
+    background-color: darkgrey;
+    outline: 1px solid slategrey;
+}
+
+.messagesContainer::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+}
+
+.messagesContainer::-webkit-scrollbar {
+    width: .3em;
 }
 
 .right .messages .heading {
@@ -707,7 +837,7 @@ main .container .right {
     cursor: pointer;
 }
 
-.right .messages .message:hover{
+.right .messages .message:hover {
     background-color: rgba(78, 78, 78, 0.1);
     border-radius: var(--card-border-radius);
 }
@@ -760,6 +890,12 @@ main .container .right {
 .right .request .action {
     display: flex;
     gap: 1rem
+}
+
+.right .request .info .infoName{
+    max-width: 6rem;
+    word-wrap: break-word;
+    overflow: hidden;
 }
 
 /* ================== CHAT BOX ==================== */
@@ -815,16 +951,17 @@ main .container .right {
     overflow-y: scroll;
     overflow-x: hidden;
 }
-.chatArea::-webkit-scrollbar-thumb{
+
+.chatArea::-webkit-scrollbar-thumb {
     background-color: darkgrey;
     outline: 1px solid slategrey;
 }
 
-.chatArea::-webkit-scrollbar-track{
+.chatArea::-webkit-scrollbar-track {
     box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
 }
 
-.chatArea::-webkit-scrollbar{
+.chatArea::-webkit-scrollbar {
     width: .3em;
 }
 
@@ -845,7 +982,7 @@ main .container .right {
     justify-content: end;
 }
 
-.message-container.own .eachMessage{
+.message-container.own .eachMessage {
     background: var(--color-gray);
 }
 

@@ -3,7 +3,7 @@ import { Link, useLocation } from "react-router-dom";
 
 export default function Sidebar() {
   const { user } = useSelector((state) => ({ ...state }));
-  const location = useLocation()
+  const location = useLocation();
 
   return (
     <>
@@ -20,13 +20,24 @@ export default function Sidebar() {
             />
           </div>
           <div className="handle">
-            <h4>{user.firstname} {user.lastname}</h4>
-            <h6 className="text-muted" style={{marginTop: ".1rem"}}>@{user.username}</h6>
+            <h4>
+              {user.firstname} {user.lastname}
+            </h4>
+            <h6 className="text-muted" style={{ marginTop: ".1rem" }}>
+              @{user.username}
+            </h6>
           </div>
         </Link>
         {/* ================ SIDEBAR ================== */}
         <div className="sidebar">
-          <Link className={location.pathname === '/' ? "menu-item active home" : "menu-item home" } to='/'>
+          <Link
+            className={
+              location.pathname === "/"
+                ? "menu-item active home"
+                : "menu-item home"
+            }
+            to="/"
+          >
             <span>
               <i className="uil uil-home"></i>
             </span>
@@ -105,7 +116,14 @@ export default function Sidebar() {
             </span>
             <h3>Message</h3>
           </Link>
-          <Link className={location.pathname === '/bookmarks' ? "menu-item active" : "menu-item" } to='/bookmarks'>
+          <Link
+            className={
+              location.pathname === "/bookmarks"
+                ? "menu-item active"
+                : "menu-item"
+            }
+            to="/bookmarks"
+          >
             <span>
               <i className="uil uil-bookmark" />
             </span>
@@ -117,11 +135,18 @@ export default function Sidebar() {
             </span>
             <h3>Theme</h3>
           </Link>
-          <Link className={location.pathname === '/profile' ? "menu-item active" : "menu-item" } to='/profile'>
+          <Link
+            className={
+              location.pathname === "/profile"
+                ? "menu-item active"
+                : "menu-item"
+            }
+            to={`/profile/${user.id}`}
+          >
             <span>
-              <i className="uil uil-setting" />
+            <i className="uil uil-user"></i>
             </span>
-            <h3>Profile Settings</h3>
+            <h3>User Profile</h3>
           </Link>
         </div>
         {/* ================= END OF SIDEBAR ================ */}

@@ -17,7 +17,7 @@ function App() {
         <Route element={<ProtectedRoute />}>
           <Route path="/" element={<Layout />} exact>
             <Route path="" element={<HomeMiddle />} />
-            <Route path="profile" element={<Profile />} />
+            <Route path="profile/:id" element={<Profile />} />
             <Route path="bookmarks" element={<Bookmarks />} />
           </Route>
         </Route>

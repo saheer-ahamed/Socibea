@@ -2,10 +2,13 @@ import axios from "axios";
 import { Image } from "cloudinary-react";
 import { useRef, useState } from "react";
 import { useSelector } from "react-redux";
+import { useNavigate, useParams } from "react-router-dom";
 import Comments from "../home/Comments";
 
 export default function PostCard({ eachFeed, setPosts }) {
   const { user } = useSelector((state) => ({ ...state }));
+  const navigate = useNavigate();
+  const params = useParams();
   const [liked, setLiked] = useState(eachFeed.likes.includes(user.id));
   const [likes, setLikes] = useState(eachFeed.likes.length);
   const [allComments, setAllComments] = useState([]);
@@ -17,25 +20,33 @@ export default function PostCard({ eachFeed, setPosts }) {
   const BaseUrl = process.env.REACT_APP_BACKEND_URL;
 
   const getComments = async () => {
-    setShowComments(!showComments);
-    await axios.get(`${BaseUrl}/${eachFeed._id}/comment`).then((response) => {
-      setAllComments(response.data);
-    });
+    try {
+      setShowComments(!showComments);
+      await axios.get(`${BaseUrl}/${eachFeed._id}/comment`).then((response) => {
+        setAllComments(response.data);
+      });
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const postComment = async () => {
-    const commentInput = commentRef.current.value;
-    await axios
-      .put(`${BaseUrl}/${eachFeed._id}/comment`, {
-        userId: user.id,
-        comment: commentInput,
-      })
-      .then((response) => {
-        console.log(response.data);
-        console.log(setAllComments);
-        setAllComments((prev) => [response.data, ...prev]);
-        resetComment();
-      });
+    try {
+      const commentInput = commentRef.current.value;
+      await axios
+        .put(`${BaseUrl}/${eachFeed._id}/comment`, {
+          userId: user.id,
+          comment: commentInput,
+        })
+        .then((response) => {
+          console.log(response.data);
+          console.log(setAllComments);
+          setAllComments((prev) => [response.data, ...prev]);
+          resetComment();
+        });
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const resetComment = () => {
@@ -43,35 +54,61 @@ export default function PostCard({ eachFeed, setPosts }) {
   };
 
   const handleLike = async () => {
-    setLiked((prev) => !prev);
-    await axios
-      .put(`${BaseUrl}/${eachFeed._id}/like`, {
-        userId: user.id,
-      })
-      .then((response) => {
-        console.log(response);
-        liked ? setLikes((prev) => prev - 1) : setLikes((prev) => prev + 1);
-      });
+    try {
+      setLiked((prev) => !prev);
+      await axios
+        .put(`${BaseUrl}/${eachFeed._id}/like`, {
+          userId: user.id,
+        })
+        .then((response) => {
+          console.log(response);
+          liked ? setLikes((prev) => prev - 1) : setLikes((prev) => prev + 1);
+        });
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const handleBookmark = async () => {
-    await axios
-      .put(`${BaseUrl}/${eachFeed._id}/save`, {
-        userId: user.id,
-      })
-      .then((response) => {
-        setBookmarked((prev) => !prev);
-        if(bookmarked === true){
-          setPosts((prev) => [...prev].filter((f) => f._id !== eachFeed._id))}
-        }
-      );
+    try {
+      await axios
+        .put(`${BaseUrl}/${eachFeed._id}/save`, {
+          userId: user.id,
+        })
+        .then((response) => {
+          setBookmarked((prev) => !prev);
+          if (bookmarked === true) {
+            setPosts((prev) => [...prev].filter((f) => f._id !== eachFeed._id));
+          }
+        });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleDelete = async () => {
+    try {
+      console.log(user.id);
+      await axios
+        .delete(`${BaseUrl}/${eachFeed._id}`, {
+          data: { userId: user.id },
+        })
+        .then((response) => {
+          setPosts((prev) => [...prev].filter((f) => f._id !== eachFeed._id));
+        });
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
     <>
       <div className="feed">
         <div className="head">
-          <div className="user">
+          <div
+            className="user"
+            onClick={() => navigate(`/profile/${eachFeed.userId}`)}
+          >
             <div className="profile-picture">
               <Image
                 cloudName="ryzoxxsw"
@@ -91,12 +128,20 @@ export default function PostCard({ eachFeed, setPosts }) {
                 {eachFeed.first_name} {eachFeed.last_name}
               </h3>
               <h6 className="text-muted">@{eachFeed.username}</h6>
-              {/* <small>Dubai, 15 MINUTES AGO</small> */}
             </div>
           </div>
-          <span className="edit">
-            <i className="uil uil-ellipsis-h" />
-          </span>
+          {params?.id === user.id ? (
+            <div className="customBtn">
+              <span className="edit">
+                <i className="uil uil-ellipsis-h" />
+              </span>
+              <ul className="dropdown" onClick={handleDelete}>
+                <li>Delete</li>
+              </ul>
+            </div>
+          ) : (
+            ""
+          )}
         </div>
         <h3 style={{ margin: ".5rem" }}>{eachFeed.desc}</h3>
         <div className="photo">
@@ -145,40 +190,17 @@ export default function PostCard({ eachFeed, setPosts }) {
         </div>
         {likes !== 0 ? (
           <div className="liked-by">
-            {/* <span>
-              <img src="./images/profile-10.jpg" alt="" />
-            </span>
-            <span>
-              <img src="./images/profile-4.jpg" alt="" />
-            </span>
-            <span>
-              <img src="./images/profile-15.jpg" alt="" />
-            </span> */}
-
-            {
-              likes === 0 ? (
-                ""
-              ) : likes === 1 ? (
-                <p>
-                  Liked by <b>{likes} person.</b>
-                </p>
-              ) : (
-                <p>
-                  Liked by <b>{likes} persons.</b>
-                </p>
-              )
-              // eachFeed.likes.lenth === 2 ? (
-              //   <p>
-              //     Liked by <b>{eachFeed.likes[0].username}</b> and{" "}
-              //     <b>{eachFeed.likes[1].username}</b>
-              //   </p>
-              // ) : (
-              //   <p>
-              //     Liked by <b>${eachFeed.likes[0].username}</b> and{" "}
-              //     <b>${eachFeed.likes.length} others.</b>
-              //   </p>
-              // )
-            }
+            {likes === 0 ? (
+              ""
+            ) : likes === 1 ? (
+              <p>
+                Liked by <b>{likes} person.</b>
+              </p>
+            ) : (
+              <p>
+                Liked by <b>{likes} persons.</b>
+              </p>
+            )}
           </div>
         ) : (
           ""
@@ -195,9 +217,7 @@ export default function PostCard({ eachFeed, setPosts }) {
         )}
         {showComments && (
           <div className="comment-section">
-            {/* <hr style={{ margin: "1rem 0 .5rem" }} className="text-muted" /> */}
             <h3>Comments</h3>
-            {/* <hr style={{ margin: ".5rem 0 1rem" }} className="text-muted" /> */}
             <div className="user comment-user">
               <div className="comment-picture">
                 <Image
@@ -229,14 +249,14 @@ export default function PostCard({ eachFeed, setPosts }) {
               ></i>
             </div>
             <div className="comments-feed">
-                {allComments &&
-                  allComments.map((each, id) => (
-                    <Comments
-                      key={id}
-                      eachComments={each}
-                      setAllComments={setAllComments}
-                    />
-                  ))}
+              {allComments &&
+                allComments.map((each, id) => (
+                  <Comments
+                    key={id}
+                    eachComments={each}
+                    setAllComments={setAllComments}
+                  />
+                ))}
             </div>
           </div>
         )}
