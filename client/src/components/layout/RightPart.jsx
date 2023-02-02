@@ -16,7 +16,7 @@ export default function RightPart() {
   const [currentChat, setCurrentChat] = useState(null);
   // const socket = useRef();
   const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
-  const socket = io.connect("ws://localhost:8000");
+  const socket = io.connect("ws://socibea.pryingchess.site");
   const handleFollow = async (id, title) => {
     await axios
       .put(`${process.env.REACT_APP_BACKEND_URL}/${id}/handleFollow`, {

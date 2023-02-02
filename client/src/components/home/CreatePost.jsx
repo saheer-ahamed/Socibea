@@ -82,7 +82,7 @@ export default function CreatePost({ setPost }) {
       formData.append("upload_preset", "ryzoxxsw");
 
       const response = await axios.post(
-        "https://api.cloudinary.com/v1_1/dl88sskyv/upload",
+        `https://api.cloudinary.com/v1_1/${process.env.REACT_APP_CLOUDINARY_CLOUDNAME}/upload`,
         formData
       );
       newPost.image = response.data.secure_url;
@@ -92,7 +92,7 @@ export default function CreatePost({ setPost }) {
       formData.append("upload_preset", "ryzoxxsw");
 
       const response = await axios.post(
-        "https://api.cloudinary.com/v1_1/dl88sskyv/upload",
+        `https://api.cloudinary.com/v1_1/${process.env.REACT_APP_CLOUDINARY_CLOUDNAME}/upload`,
         formData
       );
       newPost.video = response.data.secure_url;

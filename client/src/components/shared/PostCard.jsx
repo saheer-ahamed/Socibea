@@ -111,7 +111,7 @@ export default function PostCard({ eachFeed, setPosts }) {
           >
             <div className="profile-picture">
               <Image
-                cloudName="ryzoxxsw"
+                cloudName={process.env.REACT_APP_CLOUDINARY_CLOUDNAME}
                 publicId={
                   eachFeed.picture
                     ? eachFeed?.picture
@@ -147,7 +147,7 @@ export default function PostCard({ eachFeed, setPosts }) {
         <div className="photo">
           {eachFeed?.image ? (
             <Image
-              cloudName="ryzoxxsw"
+              cloudName={process.env.REACT_APP_CLOUDINARY_CLOUDNAME}
               publicId={eachFeed?.image}
               alt="sample image"
               className="feedImage"
@@ -221,7 +221,7 @@ export default function PostCard({ eachFeed, setPosts }) {
             <div className="user comment-user">
               <div className="comment-picture">
                 <Image
-                  cloudName="ryzoxxsw"
+                  cloudName={process.env.REACT_APP_CLOUDINARY_CLOUDNAME}
                   publicId={
                     user.picture
                       ? user?.picture

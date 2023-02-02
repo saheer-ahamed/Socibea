@@ -299,8 +299,9 @@ exports.getSavedPosts = async (req, res, next) => {
 // get each user posts
 
 exports.getUserPosts = async (req, res, next) => {
-    const userId = req.params.id
     try {
+        const userId = req.params.id
+        console.log(userId);
         const userPosts = await User.aggregate([
             {
                 $match: {
@@ -349,8 +350,10 @@ exports.getUserPosts = async (req, res, next) => {
                 $sort: { createdAt: -1 }
             }
         ])
+        console.log(userPosts);
         res.status(200).json(userPosts)
     } catch (error) {
+        console.log(error);
         res.status(500).json(error)
     }
 }
