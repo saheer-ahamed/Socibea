@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useEffect, useRef, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { SkeletonStyle } from "../loader/SkeletonStyle";
 import PostCard from "../shared/PostCard";
@@ -9,6 +9,7 @@ import { toast } from "react-hot-toast";
 
 export default function Profile() {
   const { user } = useSelector((state) => ({ ...state }));
+  const dispatch = useDispatch();
   const params = useParams();
   const profileRef = useRef();
   const coverRef = useRef();
@@ -118,6 +119,12 @@ export default function Profile() {
                   [prevState.picture]: res.data.picture,
                 });
               });
+              if (user.id === params?.id) {
+                dispatch({
+                  type: "PROFILE-CHANGED",
+                  payload: res.data.picture,
+                });
+              }
               toast.success("Profile picture successfully updated!", {
                 style: {
                   borderRadius: "10px",
@@ -187,7 +194,7 @@ export default function Profile() {
             src={userData?.cover ? userData?.cover : coverPic}
             alt="Cover pic"
             onClick={() => {
-              if(user.id === params?.id) coverRef.current.click();
+              if (user.id === params?.id) coverRef.current.click();
             }}
           />
           <img
@@ -198,7 +205,7 @@ export default function Profile() {
             }
             alt="DP"
             onClick={() => {
-              if(user.id === params?.id) profileRef.current.click();
+              if (user.id === params?.id) profileRef.current.click();
             }}
           />
         </div>

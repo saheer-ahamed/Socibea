@@ -7,7 +7,9 @@ export function userReducer(
         case "LOGIN":
             return action.payload
         case "LOGOUT":
-            return state = null 
+            return state = null
+        case "PROFILE-CHANGED":
+            return {...state, picture: action.payload }
         default: 
             return state
     }
