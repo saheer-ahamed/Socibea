@@ -6,6 +6,7 @@ import { SkeletonStyle } from "../loader/SkeletonStyle";
 import PostCard from "../shared/PostCard";
 import coverPic from "../../images/coverPicture.png";
 import { toast } from "react-hot-toast";
+import Cookies from "js-cookie";
 
 export default function Profile() {
   const { user } = useSelector((state) => ({ ...state }));
@@ -124,6 +125,8 @@ export default function Profile() {
                   type: "PROFILE-CHANGED",
                   payload: res.data.picture,
                 });
+                const userDataUpdate = { ...user, picture: res.data.picture };
+                Cookies.set("user", JSON.stringify(userDataUpdate));
               }
               toast.success("Profile picture successfully updated!", {
                 style: {

@@ -113,7 +113,9 @@ export default function PostCard({ eachFeed, setPosts }) {
               <Image
                 cloudName={process.env.REACT_APP_CLOUDINARY_CLOUDNAME}
                 publicId={
-                  eachFeed.picture
+                  user.id === params?.id && user.picture.trim().length !== 0
+                    ? user.picture
+                    : eachFeed.picture
                     ? eachFeed?.picture
                     : "https://res.cloudinary.com/dl88sskyv/image/upload/v1673098428/user-icon-person-icon-client-symbol-login-head-sign-icon-design-vector_f9aypr.jpg"
                 }
